@@ -1,7 +1,16 @@
-#ifndef ORDER_H
-#define ORDER_H
+#ifndef TRADING_ENGINE_ORDER_H
+#define TRADING_ENGINE_ORDER_H
 
 #include <string>
+#include <memory>
+#include <vector>
+#include <ctime>
+
+enum OrderType
+{
+    BUY,
+    SELL
+};
 
 namespace TradingEngine
 {
@@ -30,12 +39,14 @@ namespace TradingEngine
     class Order
     {
     public:
-        Order(std::string id, double price, double quantity, bool isBuyOrder);
+        Order(std::string id, double price, double quantity);
 
         std::string getId() const;
         double getPrice() const;
         double getQuantity() const;
-        bool isBuyOrder() const;
+        std::time_t getTimestamp() const;
+        OrderType getOrdertype() const;
+        void setOrderType(OrderType);
 
         void setQuantity(double newQuantity);
 
@@ -43,8 +54,22 @@ namespace TradingEngine
         std::string id;
         double price;
         double quantity;
-        bool buyOrder;
+        std::time_t timestamp;
+        OrderType ordertype;
+    };
+
+    class OrderMatchingStrategy
+    {
+    public:
+        virtual void matchOrders(std::vector<std::shared_ptr<Order>> &, std::vector<std::shared_ptr<Order>> &) = 0;
+        virtual ~OrderMatchingStrategy();
+    };
+
+    class PriceTimeOrderMatchingStrategy : public OrderMatchingStrategy
+    {
+    public:
+        void matchOrders(std::vector<std::shared_ptr<Order>> &, std::vector<std::shared_ptr<Order>> &) override;
     };
 }
 
-#endif // ORDER_H
+#endif // TRADING_ENGINE_ORDER_H

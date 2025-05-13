@@ -1,12 +1,17 @@
-cmake_minimum_required(VERSION 3.12)
+cmake_minimum_required(VERSION 3.10) # Ensure a modern CMake version
 
 project(TradingEngine)
 
-# Add source files
-add_executable(trading_engine src/main.cpp)
-
 # Set C++ standard
-set(CMAKE_CXX_STANDARD 11)
+set(CMAKE_CXX_STANDARD 17) # Use C++17
+set(CMAKE_CXX_STANDARD_REQUIRED True)
+
+# Add source files
+add_executable(trading_engine 
+    src/main.cpp
+    src/orderBook.cpp
+    src/order.cpp
+)
 
 # Specify additional libraries or dependencies
 target_link_libraries(trading_engine PRIVATE pthread)
