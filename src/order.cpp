@@ -55,12 +55,12 @@ void Order::setOrderType(OrderType type)
     orderType = type;
 }
 
-OrderType MarketOrder::getOrderType() const
+OrderType MarketOrder::getOrderFactoryType() const
 {
     return OrderType::MARKET;
 }
 
-OrderType LimitOrder::getOrderType() const
+OrderType LimitOrder::getOrderFactoryType() const
 {
     return OrderType::LIMIT;
 }

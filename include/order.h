@@ -44,12 +44,13 @@ namespace TradingEngine
         Order(std::string id, std::string traderId, std::string stockId, std::string symbol, double price, double quantity);
 
         virtual ~Order();
-        virtual OrderType getOrderType() const = 0;
+        virtual OrderType getOrderFactoryType() const = 0;
 
         std::string getId() const;
         std::string getTraderId() const;
         std::string getStockId() const;
         std::string getSymbol() const;
+        OrderType getOrderType() const;
         double getPrice() const;
         double getQuantity() const;
         std::time_t getTimestamp() const;
@@ -72,14 +73,14 @@ namespace TradingEngine
     {
     public:
         MarketOrder(std::string id, std::string traderId, std::string stockId, std::string symbol, double price, double quantity) : Order(id, traderId, stockId, symbol, price, quantity) {}
-        OrderType getOrderType() const override;
+        OrderType getOrderFactoryType() const override;
     };
 
     class LimitOrder : public Order
     {
     public:
         LimitOrder(std::string id, std::string traderId, std::string stockId, std::string symbol, double price, double quantity) : Order(id, traderId, stockId, symbol, price, quantity) {}
-        OrderType getOrderType() const override;
+        OrderType getOrderFactoryType() const override;
     };
 
     class OrderFactory

@@ -32,6 +32,8 @@ int main()
     std::shared_ptr<Order> buyOrder = std::make_shared<MarketOrder>(orderId1, trader.getId(), stockId1, stockSymbol1, stockPrice1, quantity1);
     buyOrder->setOrderType(OrderType::BUY);
 
+    orderBook.addOrder(buyOrder);
+
     int quantity2 = 35;
     // stock info
     std::string stockId2 = uuid();
@@ -46,7 +48,6 @@ int main()
     // trader.trade(150, 160, 12, 13);
 
     // Add orders to the order book
-    orderBook.addOrder(buyOrder);
     orderBook.addOrder(sellOrder);
 
     // Print the order book after all trading is done
