@@ -8,7 +8,7 @@ set(CMAKE_CXX_STANDARD_REQUIRED True)
 
 # Add source files
 add_executable(trading_engine 
-    src/main.cpp
+    main.cpp
     src/orderBook.cpp
     src/order.cpp
 )

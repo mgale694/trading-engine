@@ -36,3 +36,9 @@ build
 
 # Visual Studio Code
 .vscode
+
+# Debug files
+*.dSYM
+
+# Executable files
+main
