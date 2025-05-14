@@ -39,9 +39,11 @@ namespace TradingEngine
     class Order
     {
     public:
-        Order(std::string id, double price, double quantity);
+        Order(std::string traderId, std::string id, std::string symbol, double price, double quantity);
 
+        std::string getTraderId() const;
         std::string getId() const;
+        std::string getSymbol() const;
         double getPrice() const;
         double getQuantity() const;
         std::time_t getTimestamp() const;
@@ -51,11 +53,13 @@ namespace TradingEngine
         void setQuantity(double newQuantity);
 
     private:
+        std::string traderId;
         std::string id;
+        std::string symbol;
         double price;
         double quantity;
         std::time_t timestamp;
-        OrderType ordertype;
+        OrderType orderType;
     };
 
     class OrderMatchingStrategy

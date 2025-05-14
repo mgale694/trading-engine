@@ -4,12 +4,22 @@
 
 using namespace TradingEngine;
 
-Order::Order(std::string id, double price, double quantity)
-    : id(id), price(price), quantity(quantity) {}
+Order::Order(std::string traderId, std::string id, std::string symbol, double price, double quantity)
+    : traderId(traderId), id(id), price(price), quantity(quantity) {}
+
+std::string Order::getTraderId() const
+{
+    return traderId;
+}
 
 std::string Order::getId() const
 {
     return id;
+}
+
+std::string Order::getSymbol() const
+{
+    return symbol;
 }
 
 double Order::getPrice() const
@@ -29,12 +39,12 @@ std::time_t Order::getTimestamp() const
 
 OrderType Order::getOrdertype() const
 {
-    return ordertype;
+    return orderType;
 }
 
 void Order::setOrderType(OrderType type)
 {
-    ordertype = type;
+    orderType = type;
 }
 
 OrderMatchingStrategy::~OrderMatchingStrategy()
