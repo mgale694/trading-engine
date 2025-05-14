@@ -11,6 +11,7 @@ add_executable(trading_engine
     main.cpp
     src/orderBook.cpp
     src/order.cpp
+    src/uuid.cpp
 )
 
 # Specify additional libraries or dependencies

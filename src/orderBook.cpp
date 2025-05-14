@@ -101,7 +101,7 @@ void OrderBook::orderBookSummary() const
     std::cout << "Trader ID\tID\tSymbol\tPrice\tQuantity\tOrder Type\n";
     for (const auto &order : book)
     {
-        std::string orderTypeName = (order->getOrdertype() == OrderType::BUY) ? "Buy" : "Sell";
+        std::string orderTypeName = (order->getOrderType() == OrderType::BUY) ? "Buy" : "Sell";
         std::cout << order->getTraderId() << "\t" << order->getId() << "\t" << order->getSymbol() << "\t" << order->getPrice() << "\t" << order->getQuantity() << "\t\t" << orderTypeName << "\n";
     }
     std::cout << "\n";

@@ -4,17 +4,25 @@
 
 using namespace TradingEngine;
 
-Order::Order(std::string traderId, std::string id, std::string symbol, double price, double quantity)
-    : traderId(traderId), id(id), price(price), quantity(quantity) {}
+Order::Order(std::string id, std::string traderId, std::string stockId, std::string symbol, double price, double quantity)
+    : id(id), traderId(traderId), stockId(stockId), symbol(symbol), price(price), quantity(quantity) {}
+
+// Add the virtual destructor definition
+Order::~Order() {}
+
+std::string Order::getId() const
+{
+    return id;
+}
 
 std::string Order::getTraderId() const
 {
     return traderId;
 }
 
-std::string Order::getId() const
+std::string Order::getStockId() const
 {
-    return id;
+    return stockId;
 }
 
 std::string Order::getSymbol() const
@@ -37,7 +45,7 @@ std::time_t Order::getTimestamp() const
     return timestamp;
 }
 
-OrderType Order::getOrdertype() const
+OrderType Order::getOrderType() const
 {
     return orderType;
 }
@@ -45,6 +53,30 @@ OrderType Order::getOrdertype() const
 void Order::setOrderType(OrderType type)
 {
     orderType = type;
+}
+
+OrderType MarketOrder::getOrderType() const
+{
+    return OrderType::MARKET;
+}
+
+OrderType LimitOrder::getOrderType() const
+{
+    return OrderType::LIMIT;
+}
+
+OrderFactory::~OrderFactory()
+{
+}
+
+std::unique_ptr<Order> MarketOrderFactory::createOrder(std::string id, std::string traderId, std::string stockId, std::string symbol, double price, int quantity)
+{
+    return std::make_unique<MarketOrder>(id, traderId, stockId, symbol, price, quantity);
+}
+
+std::unique_ptr<Order> LimitOrderFactory::createOrder(std::string id, std::string traderId, std::string stockId, std::string symbol, double price, int quantity)
+{
+    return std::make_unique<LimitOrder>(id, traderId, stockId, symbol, price, quantity);
 }
 
 OrderMatchingStrategy::~OrderMatchingStrategy()

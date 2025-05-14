@@ -9,7 +9,9 @@
 enum OrderType
 {
     BUY,
-    SELL
+    SELL,
+    MARKET,
+    LIMIT,
 };
 
 namespace TradingEngine
@@ -39,27 +41,64 @@ namespace TradingEngine
     class Order
     {
     public:
-        Order(std::string traderId, std::string id, std::string symbol, double price, double quantity);
+        Order(std::string id, std::string traderId, std::string stockId, std::string symbol, double price, double quantity);
 
-        std::string getTraderId() const;
+        virtual ~Order();
+        virtual OrderType getOrderType() const = 0;
+
         std::string getId() const;
+        std::string getTraderId() const;
+        std::string getStockId() const;
         std::string getSymbol() const;
         double getPrice() const;
         double getQuantity() const;
         std::time_t getTimestamp() const;
-        OrderType getOrdertype() const;
-        void setOrderType(OrderType);
 
+        void setOrderType(OrderType);
         void setQuantity(double newQuantity);
 
     private:
-        std::string traderId;
         std::string id;
+        std::string traderId;
+        std::string stockId;
         std::string symbol;
         double price;
         double quantity;
         std::time_t timestamp;
         OrderType orderType;
+    };
+
+    class MarketOrder : public Order
+    {
+    public:
+        MarketOrder(std::string id, std::string traderId, std::string stockId, std::string symbol, double price, double quantity) : Order(id, traderId, stockId, symbol, price, quantity) {}
+        OrderType getOrderType() const override;
+    };
+
+    class LimitOrder : public Order
+    {
+    public:
+        LimitOrder(std::string id, std::string traderId, std::string stockId, std::string symbol, double price, double quantity) : Order(id, traderId, stockId, symbol, price, quantity) {}
+        OrderType getOrderType() const override;
+    };
+
+    class OrderFactory
+    {
+    public:
+        virtual std::unique_ptr<Order> createOrder(std::string, std::string, std::string, std::string, double, int) = 0;
+        virtual ~OrderFactory();
+    };
+
+    class MarketOrderFactory : public OrderFactory
+    {
+    public:
+        std::unique_ptr<Order> createOrder(std::string, std::string, std::string, std::string, double, int) override;
+    };
+
+    class LimitOrderFactory : public OrderFactory
+    {
+    public:
+        std::unique_ptr<Order> createOrder(std::string, std::string, std::string, std::string, double, int) override;
     };
 
     class OrderMatchingStrategy
@@ -74,6 +113,7 @@ namespace TradingEngine
     public:
         void matchOrders(std::vector<std::shared_ptr<Order>> &, std::vector<std::shared_ptr<Order>> &) override;
     };
+
 }
 
 #endif // TRADING_ENGINE_ORDER_H
