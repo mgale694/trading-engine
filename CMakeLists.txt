@@ -12,10 +12,14 @@ add_executable(trading_engine
     src/orderBook.cpp
     src/order.cpp
     src/uuid.cpp
+    src/trader.cpp
 )
 
 # Specify additional libraries or dependencies
 target_link_libraries(trading_engine PRIVATE pthread)
+
+# Add include directory for headers
+include_directories(${CMAKE_SOURCE_DIR}/include)
 
 # Install target (optional)
 # install(TARGETS trading_engine DESTINATION bin)
