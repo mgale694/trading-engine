@@ -13,44 +13,57 @@ int main()
     // Initialize the order book
     OrderBook orderBook;
 
-    // Example Trader
-    // Generate a UUID for the trader
-    std::string traderId = uuid();
-    Trader trader(traderId, "Trader1");
+    // Parameters
+    int N = 10; // Number of traders
+    int M = 50; // Number of trades per trader
 
-    // Print the trader's ID and name
-    std::cout << "Trader initialized with ID: " << trader.getId() << ", Name: " << trader.getName() << std::endl;
+    std::vector<std::string> symbols = {"AAPL", "TSLA", "GOOG", "ALPH", "TELE"};
+    std::vector<double> basePrices = {150.0, 50.0, 100.0, 120.0, 200.0};
 
-    int quantity1 = 25;
-    // stock info
-    std::string stockId1 = uuid();
-    std::string stockSymbol1 = "AAPL";
-    double stockPrice1 = 150.0;
+    std::random_device rd;
+    std::mt19937 gen(rd());
+    std::uniform_int_distribution<> symbolDist(0, symbols.size() - 1);
+    std::uniform_int_distribution<> orderTypeDist(0, 1); // 0: BUY, 1: SELL
+    std::uniform_int_distribution<> quantityDist(1, 100);
+    std::uniform_real_distribution<> priceDeltaDist(-0.5, 0.5);
 
-    // Place buy
-    std::string orderId1 = uuid();
-    std::shared_ptr<Order> buyOrder = std::make_shared<MarketOrder>(orderId1, trader.getId(), stockId1, stockSymbol1, stockPrice1, quantity1);
-    buyOrder->setOrderType(OrderType::BUY);
+    for (int i = 0; i < N; ++i)
+    {
+        std::string traderId = uuid();
+        std::string traderName = "Trader" + std::to_string(i + 1);
+        Trader trader(traderId, traderName);
 
-    orderBook.addOrder(buyOrder);
+        std::cout << "Trader initialized with ID: " << trader.getId() << ", Name: " << trader.getName() << std::endl;
 
-    int quantity2 = 35;
-    // stock info
-    std::string stockId2 = uuid();
-    std::string stockSymbol2 = "TSLA";
-    double stockPrice2 = 50.0;
+        for (int j = 0; j < M; ++j)
+        {
+            int symbolIdx = symbolDist(gen);
+            std::string stockId = uuid();
+            std::string stockSymbol = symbols[symbolIdx];
+            double basePrice = basePrices[symbolIdx];
+            double priceDelta = std::round(priceDeltaDist(gen) * 10.0) / 10.0; // round to nearest 0.1
+            double stockPrice = basePrice + priceDelta;
+            int quantity = quantityDist(gen);
 
-    // Place sell order
-    std::string orderId2 = uuid();
-    std::shared_ptr<Order> sellOrder = std::make_shared<MarketOrder>(orderId2, trader.getId(), stockId2, stockSymbol2, stockPrice2, quantity2);
-    sellOrder->setOrderType(OrderType::SELL);
+            std::string orderId = uuid();
+            std::shared_ptr<Order> order = std::make_shared<MarketOrder>(
+                orderId, trader.getId(), stockId, stockSymbol, stockPrice, quantity);
 
-    // trader.trade(150, 160, 12, 13);
+            if (orderTypeDist(gen) == 0)
+            {
+                order->setOrderType(OrderType::BUY);
+            }
+            else
+            {
+                order->setOrderType(OrderType::SELL);
+            }
 
-    // Add orders to the order book
-    orderBook.addOrder(sellOrder);
+            orderBook.addOrder(order);
+        }
+    }
 
     // Print the order book after all trading is done
+    orderBook.tradeHistorySummary();
     orderBook.orderBookSummary();
 
     return 0;
